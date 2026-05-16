@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authority AI - 5X Empire</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { background-color: #0b0f19; color: #f3f4f6; font-family: 'Segoe UI', Roboto, sans-serif; }
+        .glass { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .glow-btn { transition: all 0.3s ease; box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
+        .glow-btn:hover { box-shadow: 0 0 25px rgba(59, 130, 246, 0.6); }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 10px; }
+    </style>
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <div class="w-full md:w-80 glass flex flex-col justify-between border-r border-gray-800 p-4 z-10">
+        <div>
+            <div class="flex items-center space-x-3 mb-8 px-2">
+                <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg">
+                    <i class="fa-solid fa-bolt text-white text-xl animate-pulse"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-400">AUTHORITY AI</h1>
+                    <p class="text-xs text-gray-500">5X Hardcore Strategist</p>
+                </div>
+            </div>
+
+            <div id="usage-panel" class="mb-6 p-3 bg-gray-900/60 rounded-xl border border-gray-800 text-sm">
+                <div class="flex justify-between mb-1 text-gray-400">
+                    <span>Free Trial Status:</span>
+                    <span id="usage-text" class="font-semibold text-blue-400">0 / 5 Credits</span>
+                </div>
+                <div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden">
+                    <div id="usage-bar" class="bg-blue-500 h-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <p class="text-xs font-semibold text-gray-500 uppercase tracking-widest px-2 mb-3">Dominance Hub</p>
+            <nav class="space-y-1" id="category-list">
+                <button onclick="switchCategory('tiktok', 'TikTok Growth 5X', 'fa-brands fa-tiktok')" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-left text-sm font-medium transition-all bg-gray-800 text-blue-400 border-l-4 border-blue-500" id="btn-tiktok">
+                    <i class="fa-brands fa-tiktok text-lg w-6"></i> <span>TikTok Strategy</span>
+                </button>
+                <button onclick="switchCategory('instagram', 'Instagram Cinematic', 'fa-brands fa-instagram')" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-left text-sm font-medium transition-all text-gray-400 hover:bg-gray-900 hover:text-gray-200" id="btn-instagram">
+                    <i class="fa-brands fa-instagram text-lg w-6"></i> <span>Instagram Growth</span>
+                </button>
+                <button onclick="switchCategory('youtube', 'YouTube Automation', 'fa-brands fa-youtube')" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-left text-sm font-medium transition-all text-gray-400 hover:bg-gray-900 hover:text-gray-200" id="btn-youtube">
+                    <i class="fa-brands fa-youtube text-lg w-6"></i> <span>YouTube Empire</span>
+                </button>
+                <button onclick="switchCategory('facebook', 'Facebook Viral System', 'fa-brands fa-facebook')" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-left text-sm font-medium transition-all text-gray-400 hover:bg-gray-900 hover:text-gray-200" id="btn-facebook">
+                    <i class="fa-brands fa-facebook text-lg w-6"></i> <span>Facebook Page</span>
+                </button>
+                <button onclick="switchCategory('business', 'Global Business Alpha', 'fa-solid fa-briefcase')" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-left text-sm font-medium transition-all text-gray-400 hover:bg-gray-900 hover:text-gray-200" id="btn-business">
+                    <i class="fa-solid fa-briefcase text-lg w-6"></i> <span>Business Scaling</span>
+                </button>
+                <button onclick="switchCategory('freelancer', 'Freelancer Wealth 0-100', 'fa-solid fa-laptop-code')" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-left text-sm font-medium transition-all text-gray-400 hover:bg-gray-900 hover:text-gray-200" id="btn-freelancer">
+                    <i class="fa-solid fa-laptop-code text-lg w-6"></i> <span>Freelancer Hub</span>
+                </button>
+                <button onclick="switchCategory('powerpoint', 'Competitor & ICP Analysis', 'fa-solid fa-chart-pie')" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-left text-sm font-medium transition-all text-gray-400 hover:bg-gray-900 hover:text-gray-200" id="btn-powerpoint">
+                    <i class="fa-solid fa-chart-pie text-lg w-6"></i> <span>Research & Slide Matrix</span>
+                </button>
+                <button onclick="switchCategory('sales', 'Hardcore Closing & Sales', 'fa-solid fa-dollar-sign')" class="w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-left text-sm font-medium transition-all text-gray-400 hover:bg-gray-900 hover:text-gray-200" id="btn-sales">
+                    <i class="fa-solid fa-dollar-sign text-lg w-6 text-center"></i> <span>Sales & Closing</span>
+                </button>
+            </nav>
+        </div>
+
+        <div class="mt-auto pt-4 border-t border-gray-800">
+            <a id="checkout-btn" href="#" target="_blank" class="w-full glow-btn bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold py-3 px-4 rounded-xl text-center block text-sm">
+                <i class="fa-solid fa-crown mr-2 text-amber-400"></i> Unlock 5X Unlimited Access
+            </a>
+        </div>
+    </div>
+
+    <div class="flex-1 flex flex-col h-full relative">
+        
+        <header class="h-16 border-b border-gray-800 flex items-center justify-between px-6 bg-gray-950/40">
+            <div class="flex items-center space-x-3">
+                <i id="current-icon" class="fa-brands fa-tiktok text-xl text-blue-400"></i>
+                <h2 id="current-title" class="font-semibold text-gray-200 text-lg">TikTok Growth 5X</h2>
+            </div>
+            <div class="flex items-center space-x-3">
+                <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+                <span class="text-xs text-gray-400 font-medium tracking-wide uppercase">AI Matrix Engine Active</span>
+            </div>
+        </header>
+
+        <div id="paywall-overlay" class="absolute inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
+            <div class="max-w-md w-full bg-gradient-to-b from-gray-900 to-black p-8 rounded-2xl border border-gray-800 text-center shadow-2xl">
+                <div class="w-16 h-16 bg-blue-600/10 border border-blue-500/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-lock text-3xl text-blue-400"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-2">5X Limit Reached</h3>
+                <p class="text-gray-400 text-sm mb-6">You have exhausted your free queries. Unlock the 100% Full Execution Engine to scale from 0 to Millions. 30-Day Content Matrix, Document Generators & Live Competitor Data Awaits.</p>
+                <a id="modal-checkout-btn" href="#" target="_blank" class="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-xl font-bold text-white shadow-lg shadow-blue-600/20 block transition-all">
+                    Upgrade to Pro Now ($)
+                </a>
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-6 space-y-4" id="chat-box">
+            <div class="flex space-x-3 max-w-3xl" id="system-greeting">
+                <div class="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center flex-shrink-0 text-xs font-bold"><i class="fa-solid fa-robot"></i></div>
+                <div class="p-4 bg-gray-900/50 rounded-2xl border border-gray-800/80 leading-relaxed text-sm">
+                    Welcome. I am the 5X Authority AI. Do not ask me simple definitions. Give me your raw stats, your stagnant accounts, or your business model. I will perform a deep diagnostic analysis and generate standard protocols that clear standard paths.
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 bg-gray-950/60 border-t border-gray-800">
+            <div class="max-w-4xl mx-auto flex items-center space-x-2 bg-gray-900/80 border border-gray-800 rounded-xl p-2 focus-within:border-blue-500/50 transition-all">
+                <textarea id="user-input" rows="1" placeholder="Command the AI Hub (e.g., 'Analyze my viral dead-zone and spit out a 30-day target calendar')..." class="flex-1 bg-transparent border-0 outline-none focus:ring-0 text-sm py-2 px-3 resize-none text-gray-200 placeholder-gray-500"></textarea>
+                <button onclick="handleExecution()" class="h-10 px-5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-lg text-white font-medium text-sm flex items-center space-x-1 shadow-md transition-all">
+                    <span>Execute</span> <i class="fa-solid fa-paper-plane text-xs"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- ⚠️ CRITICAL CONFIGURATION ⚠️ ---
+        // Replace these with your exact keys from notes. DO NOT SHARE THIS FILE AFTER REPLACING!
+        const SUPABASE_URL = "https://dmtyfvgrcebzwssqoxrv.supabase.co/rest/v1/"; 
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRtdHlmdmdyY2Viendzc3FveHJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3MDQ0NTMsImV4cCI6MjA5MzI4MDQ1M30.rg0JaQjz9948IYduEZIDOQGfRZnIcCkxjD6vLgQibjA"; 
+        const LEMON_SQUEEZY_PRODUCT_URL = "#"; // We will build this in Step 5.
+        
+        // Initialize Supabase Client
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let currentCategory = 'tiktok';
+        let userIP = '';
+
+        // Fetch User IP on load to maintain strict serverless security check
+        async function fetchIP() {
+            try {
+                let res = await fetch('https://api.ipify.org?format=json');
+                let data = await res.json();
+                userIP = data.ip;
+                document.getElementById('checkout-btn').href = LEMON_SQUEEZY_PRODUCT_URL + "?checkout[custom][user_ip]=" + userIP;
+                document.getElementById('modal-checkout-btn').href = LEMON_SQUEEZY_PRODUCT_URL + "?checkout[custom][user_ip]=" + userIP;
+                await syncUsageAndLimits();
+            } catch (e) {
+                userIP = 'fallback_local_user';
+                await syncUsageAndLimits();
+            }
+        }
+
+        // Check subscription status and usage limits from database tables
+        async function syncUsageAndLimits() {
+            // Check Pro
+            let { data: sub } = await supabase.from('user_subscriptions').select('is_pro').eq('user_ip', userIP).maybeSingle();
+            let isPro = sub ? sub.is_pro : false;
+
+            if (isPro) {
+                document.getElementById('usage-panel').innerHTML = `<div class="text-emerald-400 font-bold flex items-center"><i class="fa-solid fa-crown mr-2 text-amber-400"></i> PRO UNLIMITED ACTIVE</div>`;
+                document.getElementById('paywall-overlay').classList.add('hidden');
+                return true; 
+            }
+
+            // Check Usage
+            let { data: usage } = await supabase.from('user_usage').select('request_count').eq('user_ip', userIP).maybeSingle();
+            let count = usage ? usage.request_count : 0;
+
+            document.getElementById('usage-text').innerText = `${count} / 5 Credits`;
+            document.getElementById('usage-bar').style.width = `${(count / 5) * 100}%`;
+
+            if (count >= 5) {
+                document.getElementById('paywall-overlay').classList.remove('hidden');
+                return false;
+            }
+            return true;
+        }
+
+        // Handle category switching to completely separate the chat boxes contextually
+        function switchCategory(catId, title, iconClass) {
+            currentCategory = catId;
+            document.getElementById('current-title').innerText = title;
+            document.getElementById('current-icon').className = `${iconClass} text-xl text-blue-400`;
+            
+            // UI Button Active States reset
+            document.querySelectorAll('#category-list button').forEach(btn => {
+                btn.className = "w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-left text-sm font-medium transition-all text-gray-400 hover:bg-gray-900 hover:text-gray-200";
+            });
+            document.getElementById(`btn-${catId}`).className = "w-full flex items-center space-x-3 px-3 py-3 rounded-xl text-left text-sm font-medium transition-all bg-gray-800 text-blue-400 border-l-4 border-blue-500";
+            
+            // Clear current view and load history from database for this specific box
+            document.getElementById('chat-box').innerHTML = '';
+            loadChatHistory();
+        }
+
+        // Load targeted context history
+        async function loadChatHistory() {
+            let { data: history } = await supabase.from('chat_history').select('*').eq('user_ip', userIP).order('id', { ascending: true });
+            
+            // Render category-specific chats
+            let hasMessages = false;
+            if(history) {
+                history.forEach(msg => {
+                    // Simple parse or context tag check if available, or load historical array
+                    appendMessage(msg.role, msg.content);
+                    hasMessages = true;
+                });
+            }
+            if(!hasMessages) {
+                document.getElementById('chat-box').innerHTML = `
+                <div class="flex space-x-3 max-w-3xl">
+                    <div class="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center flex-shrink-0 text-xs font-bold"><i class="fa-solid fa-robot"></i></div>
+                    <div class="p-4 bg-gray-900/50 rounded-2xl border border-gray-800/80 leading-relaxed text-sm">
+                        Matrix initialized for [${currentCategory.toUpperCase()} Hub]. Drop your raw parameters. I will build an elite architecture blueprint.
+                    </div>
+                </div>`;
+            }
+        }
+
+        function appendMessage(role, text) {
+            const chatBox = document.getElementById('chat-box');
+            const isAI = role === 'assistant' || role === 'system';
+            const msgHtml = `
+                <div class="flex space-x-3 max-w-4xl ${isAI ? '' : 'ml-auto flex-row-reverse space-x-reverse'}">
+                    <div class="h-8 w-8 rounded-lg ${isAI ? 'bg-blue-600' : 'bg-gray-700'} flex items-center justify-center flex-shrink-0 text-xs font-bold text-white">
+                        <i class="fa-solid ${isAI ? 'fa-robot' : 'fa-user'}"></i>
+                    </div>
+                    <div class="p-4 rounded-2xl border ${isAI ? 'bg-gray-900/40 border-gray-800 text-gray-200' : 'bg-blue-600/10 border-blue-500/20 text-white'} text-sm leading-relaxed whitespace-pre-wrap shadow-sm">
+                        ${text}
+                    </div>
+                </div>`;
+            chatBox.insertAdjacentHTML('beforeend', msgHtml);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // CORE 5X EXECUTION PATTERN ENGINE
+        async function handleExecution() {
+            const inputField = document.getElementById('user-input');
+            const prompt = inputField.value.trim();
+            if (!prompt) return;
+
+            inputField.value = '';
+            
+            // Check limits live before running
+            let allowed = await syncUsageAndLimits();
+            if (!allowed) return;
+
+            // Render User Prompt
+            appendMessage('user', prompt);
+
+            // Log User question input directly inside database history to keep track
+            await supabase.from('chat_history').insert([{ user_ip: userIP, role: 'user', content: `[${currentCategory.toUpperCase()}] ${prompt}` }]);
+
+            // Increment raw table count inside 'user_usage' via database tracking
+            let { data: usage } = await supabase.from('user_usage').select('request_count').eq('user_ip', userIP).maybeSingle();
+            if(!usage) {
+                await supabase.from('user_usage').insert([{ user_ip: userIP, request_count: 1 }]);
+            } else {
+                await supabase.from('user_usage').update({ request_count: usage.request_count + 1 }).eq('user_ip', userIP);
+            }
+            await syncUsageAndLimits();
+
+            // Simulate Extreme 5X AI Hardcore Output Engine
+            setTimeout(async () => {
+                let systemHardcoreOutput = generate5XResponse(currentCategory, prompt);
+                appendMessage('assistant', systemHardcoreOutput);
+                
+                // Save AI Master Output inside database logs
+                await supabase.from('chat_history').insert([{ user_ip: userIP, role: 'assistant', content: systemHardcoreOutput }]);
+            }, 1200);
+        }
+
+        // System response core modules for step-by-step supremacy
+        function generate5XResponse(category, input) {
+            let baseCalendar = `### 🌟 [CRITICAL SYSTEM] ULTIMATE 30-DAY CRITICAL ROADMAP PROTOCOL
+STATUS: 100% COMPLETE GENERATION BASED ON AUDIENCE ALGORITHMS.
+
+| Day | Target Objective | Best Drop Time (EST) | High Retention Format | Target Location Hook |
+|---|---|---|---|---|
+| Day 1-5 | Viral Dead-Zone Breaking Setup | 11:15 AM & 6:45 PM | Fast-Cut Retainers (3-sec Shock) | USA & Tier-1 Premium |
+| Day 6-15 | High Ticket Trust Funnel Shift | 12:00 PM & 8:15 PM | Long-form Storytelling Cinematic | Global Youth & High Net |
+| Day 16-30 | Absolute Audience Monetization | 3:30 PM & 9:00 PM | Document Drops & CTA Aggressive | US Buyer Demographic |`;
+
+            let answers = {
+                tiktok: `### 🚀 5X TIKTOK ARCHITECTURE SYSTEM DIAGNOSTIC\n\nYour account suffers from standard algorithmic throttling because your watch-time retention velocity falls below 67% in the first 3 seconds.\n\n**CRITICAL CORE FIXES REQUIRED:**\n1. Stop greeting the audience. Start with a high-impact negative hook (e.g., "99% of creators fail because they do this...").\n2. Target US Audience exclusively by optimizing meta-parameters.\n\n${baseCalendar}\n\n**🛠️ COVER DESIGN SPECIFICATION MATRIX GENERATED:**\n* Use dark high-contrast neon blues with absolute clean bold white sans-serif headings.\n* Keep key focal visual asset centered tightly to avoid safe-zone cropping on standard devices.`,
+                instagram: `### 📸 INSTAGRAM REELS 5X CINEMATIC VISUAL BLUEPRINT\n\nYour current engagement architecture is weak because your colorgrading and transition pacing do not prompt loop saves.\n\n**EXECUTION BLUEPRINT FOR TARGET GROWTH:**\n* **The Loop Hack:** Create an endless transition loop where the final text naturally wraps to the initial opening hook statement.\n* **Audio Vector:** Deploy unrecognized cinematic background soundbeds to register maximum save and audio-page actions.\n\n${baseCalendar}`,
+                youtube: `### 🎥 YOUTUBE EMPIRE 5X ALGORITHMIC VELOCITY PROTOCOL\n\nSimple uploads fail. We require strict CTR and AVD optimization pipelines to force the homepage recommendation engine.\n\n**THE PROTOCOL SPECIFICATIONS:**\n* **Thumbnail Concept:** Split-frame absolute validation model. Red accent boxes indicating system failures contrasted against clean graphs.\n* **The Script Rule:** Eradicate formal introductions. Launch into a high-octane narrative loop within 1.5 seconds.\n\n${baseCalendar}`,
+                facebook: `### 👑 FACEBOOK PAGE VIRAL SYSTEM PROTOCOL\n\nFacebook requires immediate high share-to-view ratios. If your shares drop under 4% within hour 1, the page dies.\n\n**STRATEGIC BLUEPRINT PROTOCOL:**\n* Deploy community-driven emotional polarizers inside the caption structure.\n* Force responses by prompting tactical interactive open loops in the pin-comment segment.\n\n${baseCalendar}`,
+                business: `### 💼 GLOBAL BUSINESS ALPHA GROWTH MATRIX\n\nYour present system is converting poorly because your offer positioning creates friction rather than clear, high-perceived structural superiority.\n\n**EXECUTION BLUEPRINT:**\n1. **Value Stacking:** Reposition your core operations into an absolute zero-risk framework.\n2. **Inbound Setup:** Route prospects through automated qualification paths that score lead quality before human outreach.\n\n${baseCalendar}`,
+                freelancer: `### 💻 FREELANCER WEALTH 0 TO 100 SYSTEM\n\nStop pitching standard skills. Skills are a commodity. Sell hard execution and business results.\n\n**DOMINANCE PROTOCOL:**\n* **The Cold Script Pivot:** "I do not want your retainer. I want to build a system that drives exactly $10k inside your funnel. If it fails, you pay $0."\n* **Platform Routing:** Exit competitive race-to-the-bottom freelance boards immediately. Move target prospecting directly to executive DM channels.\n\n${baseCalendar}`,
+                powerpoint: `### 📊 5X RESEARCH, COMPETITOR MATRIX & ICP BLUEPRINT\n\nStandard ICP profiles are useless text. We build behavioral archetypes that target buyer pain points directly.\n\n**COMPETITOR MATRIX DATA STRUCTURE:**\n* Competitor Blindspot: They provide answers but zero execution roadmaps. Our entry vector is immediate blueprint delivery.\n* ICP Target: High-intent American entrepreneurs aged 18-34 seeking strategic guidance.\n\n**SLIDE STRUCTURAL MATRIX:**\n* Slide 1-3: Problem Statement (Shock Stat)\n* Slide 4-10: Execution Data & 30-Day Blueprint Tables`,
+                sales: `### 💰 HARDCORE CLOSING & EMOTIONAL SALES SCRIPTS\n\nSales are lost because you chase the client, forcing them into defensive positioning. Reverse the frame immediately.\n\n**THE ABSOLUTE CLOSING DIALOGUE SCHEMA:**\n* *The Pivot:* "I am not here to convince you. I am checking if your brand matches our criteria to hit a stable $20k scale. If you're not ready to execute instructions 100%, we are not a fit."\n* *The Trigger:* Transition text away from price points. Focus entirely on the massive cost of inaction and lost time.`
+            };
+            return answers[category] || answers['tiktok'];
+        }
+
+        // Initialize App on load
+        window.onload = fetchIP;
+    </script>
+</body>
+</html>
